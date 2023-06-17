@@ -1,8 +1,8 @@
 'use client'
 import { useTheme, Text } from '@nextui-org/react';
 import { Button } from "@nextui-org/react";
-import { Image } from "@nextui-org/react";
-
+import flunky from './Cog-bossbot-flunky.jpg'
+import Image from 'next/image'
 export default function Home() {
 
   const { theme } = useTheme();
@@ -12,9 +12,8 @@ export default function Home() {
         <Image
             width={320}
             height={180}  
-            src="../docs/assets/images/Cog-bossbot-flunky.webp"
+            src={flunky}
             alt="Default Image"
-            objectFit="cover"
         />
    </div>
    )
