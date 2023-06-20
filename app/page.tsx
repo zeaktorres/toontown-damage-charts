@@ -98,7 +98,7 @@ export default function Home() {
             {
                 page === Page.END &&
                 <div className="absolute top-10 left-10">
-                    <Text className="text-white">{"Max Damage: " + maxDamage }</Text>
+                    <p className="text-inherit">{"Max Damage: " + maxDamage }</p>
                 </div>
             }
         </>

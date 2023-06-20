@@ -16,7 +16,7 @@ export default function CogList({cogType, handleLevelButton}: cogListInterface) 
   const getLevelButtons = (cog: cogInterface) => { 
       return cog.levels.map((level: levelInterface) => {
             return (
-                <Button key={level.level} onPress={() => {handleLevelButton(level.maxDamage)}}>{level.level}</Button> 
+                <Button size="sm" key={level.level} onPress={() => {handleLevelButton(level.maxDamage)}}>{level.level}</Button> 
              )
       })
   }
@@ -24,11 +24,11 @@ export default function CogList({cogType, handleLevelButton}: cogListInterface) 
   const getBossBots = () => {
       return (bossBots.map((bossBot) => {
          return (
-            <div key={bossBot.name} className='content-center justify-center text-center top-10 left-10 space-x-2' >
-                <Text className="text-white" size="5x-large">{bossBot.name}</Text>      
+            <div key={bossBot.name} className='space-y-1 w-fit content-center justify-center text-center top-10 left-10 space-x-2' >
+                <Text color="seconday" size="5x-large">{bossBot.name}</Text>  
                     <Image
-                        width={180}
-                        height={180}  
+                        width={140}
+                        height={140}  
                         src={bossBot.image}
                         alt={bossBot.name}
                  />
