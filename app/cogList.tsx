@@ -25,7 +25,7 @@ export default function CogList({cogType, handleLevelButton}: cogListInterface) 
       return (bossBots.map((bossBot) => {
          return (
             <div key={bossBot.name} className='content-center justify-center text-center top-10 left-10 space-x-2' >
-                <Text size="5x-large">{bossBot.name}</Text>      
+                <Text className="text-white" size="5x-large">{bossBot.name}</Text>      
                     <Image
                         width={180}
                         height={180}  
