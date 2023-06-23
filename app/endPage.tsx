@@ -13,7 +13,7 @@ export default function EndPage({cogs, handleResetButton, maxDamage}: EndPageInt
         return (
                cogs.map((cog: specifiedCogInterface) => {
                   return (
-                      <div className='flex space-x-2 space-y-2'>
+                      <div key={`${cog.name} ${cog.level}`} className='flex space-x-2 space-y-2'>
                             <Image
                                         width={40}
                                         height={40}  
