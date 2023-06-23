@@ -19,7 +19,7 @@ export default function NumberOfCogs({handleNumberOfCogs}: NumberOfCogsInterface
             <Text color="secondary" className="">
                 Number of Cogs?
             </Text>
-            <div className="space-x-2 flex">
+            <div className="space-y-2">
                 {getButtons()}
             </div>
         </div>    

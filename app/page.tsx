@@ -1,15 +1,18 @@
 'use client'
-import { Button, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useReducer } from 'react';
 import CogTypes from "./cogTypes";
 import { CogTypesEnum } from "./cogTypesEnum";
 import CogList from "./cogList"
 import NumberOfCogs from "./numberOfCogs";
+import EndPage from "./endPage";
+import specifiedCogInterface from "./specifiedCogInterface";
 enum ButtonPressed {
     SIMULATE_BUTTON = "simulateButtonPressed",
-    COG_BUTTON_PRESSED = "cogButtonPressed",
+    NUMBER_OF_COGS_BUTTON_PRESSED = "cogButtonPressed",
     COG_TYPE_PRESSED = "cogTypesButtonPressed",
-    LEVEL_BUTTON = "levelButtonPressed"
+    LEVEL_BUTTON = "levelButtonPressed",
+    RESET_BUTTON = "resetButtonPressed"
 }
 
 enum Page {
@@ -24,51 +27,60 @@ type State = {
     page: Page, 
     numberOfCogs?: number,
     cogType?: CogTypesEnum,
-    maxDamage?: number
+    maxDamage?: number,
+    cogs?: specifiedCogInterface[]
 }
 
 type Action =
  | { type: ButtonPressed.SIMULATE_BUTTON}
- | { type: ButtonPressed.COG_BUTTON_PRESSED, payload: number}
+ | { type: ButtonPressed.NUMBER_OF_COGS_BUTTON_PRESSED, payload: number}
  | { type: ButtonPressed.COG_TYPE_PRESSED, payload: CogTypesEnum }
- | { type: ButtonPressed.LEVEL_BUTTON, payload: number }
+ | { type: ButtonPressed.LEVEL_BUTTON, payload: specifiedCogInterface}
+ | { type: ButtonPressed.RESET_BUTTON }
 
 const handleAction = (state: State, action: Action): State => {
-   console.log(state.maxDamage)
    switch (action.type){
         case ButtonPressed.SIMULATE_BUTTON:
             return { page: Page.NUMBER_OF_COGS}
-        case ButtonPressed.COG_BUTTON_PRESSED:
+        case ButtonPressed.NUMBER_OF_COGS_BUTTON_PRESSED:
             return { page: Page.COG_TYPES, numberOfCogs: action.payload }
         case ButtonPressed.COG_TYPE_PRESSED:
-            return { page: Page.COG_LIST, numberOfCogs: state.numberOfCogs, cogType: action.payload, maxDamage: state.maxDamage } 
+            return { page: Page.COG_LIST, numberOfCogs: state.numberOfCogs, cogType: action.payload, maxDamage: state.maxDamage, cogs: state.cogs } 
         case ButtonPressed.LEVEL_BUTTON:
-            return { page: state.numberOfCogs === 1 ? Page.END : Page.COG_TYPES, numberOfCogs: state.numberOfCogs !== 1 ? state.numberOfCogs ? state.numberOfCogs - 1 : 0 : 0, 
-                        maxDamage: state.maxDamage ? state.maxDamage + action.payload : action.payload}
+            console.log("COGS" + state.cogs + [action.payload])
+            return { page: state.numberOfCogs === 1 ? Page.END : Page.COG_TYPES, 
+                        numberOfCogs: state.numberOfCogs !== 1 ? state.numberOfCogs ? state.numberOfCogs - 1 : 0 : 0, 
+                        maxDamage: state.maxDamage ? state.maxDamage + action.payload.damage : action.payload.damage, 
+                        cogs: state.cogs ? state.cogs.concat(action.payload) : [action.payload]}
+        case ButtonPressed.RESET_BUTTON:
+            return {page: Page.START }
    }
 }
 
 export default function Home() {
-    const [{page, numberOfCogs, cogType, maxDamage}, dispatch] = useReducer(handleAction, 
+    const [{page, cogType, maxDamage, cogs}, dispatch] = useReducer(handleAction, 
         { page: Page.START, numberOfCogs: -1});
   
-    console.log(maxDamage)
+    console.log(cogs)
 
     const simulateButton = () => {
         dispatch({type: ButtonPressed.SIMULATE_BUTTON})
     }
 
     const handleNumberOfCogs = (i: number) => {
-        dispatch({type: ButtonPressed.COG_BUTTON_PRESSED, payload: i})
+        dispatch({type: ButtonPressed.NUMBER_OF_COGS_BUTTON_PRESSED, payload: i})
     }
 
     const handleCogType = (cogType: CogTypesEnum): void => {
-        console.log("Handle Cog Type")
         dispatch({type: ButtonPressed.COG_TYPE_PRESSED, payload: cogType})
     }
     
-    const handleLevelButton = (maxDamage: number) => {
-        dispatch({type: ButtonPressed.LEVEL_BUTTON, payload: maxDamage})
+    const handleLevelButton = (cog: specifiedCogInterface) => {
+        dispatch({type: ButtonPressed.LEVEL_BUTTON, payload: cog})
+    }
+
+    const handleResetButton = () => {
+        dispatch({type: ButtonPressed.RESET_BUTTON})
     }
 
     return (
@@ -98,8 +110,8 @@ export default function Home() {
             {
                 page === Page.END &&
                 <div className="absolute top-10 left-10">
-                    <p className="text-inherit">{"Max Damage: " + maxDamage }</p>
-                </div>
+                    {cogs && maxDamage && <EndPage cogs={cogs} maxDamage={maxDamage} handleResetButton={handleResetButton}/> } 
+               </div>
             }
         </>
     )
